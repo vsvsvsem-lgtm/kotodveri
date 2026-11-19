@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Котодвери — новогодний адвент с котиками</title>
+<meta name="description" content="Каждую неделю — новая дверца и новая порода котика. За каждой дверцей ждёт что-то заМУРчательное!">
+<meta name="theme-color" content="#170e22">
+<meta property="og:title" content="Котодвери">
+<meta property="og:description" content="Новогодний адвент: каждую неделю новая дверца и новая порода котика.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🐱%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#170e22;--bg2:#241833;--ink:#f5ecd9;--mut:#b7a9c9;--pink:#e8b4c0;--lav:#b9a6e0;--mint:#a8d8c3;--cream:#f5ecd9;--gold:#e6c477;--dk:#2a1b38;--tile:#2c1f40}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*:before,*:after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 Nunito,system-ui,sans-serif}
+h1,h2,.num,.mau{font-family:Comfortaa,Nunito,sans-serif}
+#app{max-width:480px;margin:0 auto;padding:20px 16px 40px}
+header{text-align:center;margin-bottom:16px}
+h1{margin:0;font-size:30px;letter-spacing:.02em}
+header p{margin:4px 0 0;color:var(--pink);font-size:14px}
+.nav{display:flex;align-items:center;justify-content:space-between;margin:12px 0}
+.nav h2{margin:0;font-size:19px}
+button{font:inherit;color:inherit;cursor:pointer}
+.ib{width:40px;height:40px;border-radius:50%;border:0;background:var(--tile);font-size:20px}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.wd{text-align:center;font-size:12px;color:var(--mut)}
+.door{position:relative;aspect-ratio:3/4;border:0;padding:0;border-radius:999px 999px 5px 5px;color:var(--dk);font-weight:700;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;box-shadow:0 3px 0 rgba(0,0,0,.28),inset 0 0 0 3px rgba(255,255,255,.35)}
+.door .num{font-size:14px;line-height:1}
+.door:after{content:"";position:absolute;right:20%;top:56%;width:4px;height:4px;border-radius:50%;background:rgba(42,27,56,.55)}
+.door.lock{opacity:.35;box-shadow:none;cursor:default}
+.door.today{outline:3px solid var(--gold);outline-offset:2px}
+.door.open{background:var(--tile)!important;color:var(--ink);overflow:hidden;box-shadow:inset 0 0 0 2px var(--lav)}
+.door.open:after{display:none}
+.door.open svg{position:absolute;inset:6px -4px auto;width:calc(100% + 8px)}
+.door.open .num{position:relative;font-size:11px;color:var(--mut)}
+.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:8px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--bg2);border-top:1px solid rgba(185,166,224,.25)}
+.tabs button{flex:1;max-width:200px;padding:10px 4px;font-size:14px;border:0;border-radius:14px;background:transparent;font-weight:700;color:var(--mut)}
+.tabs button[aria-current="true"]{background:var(--lav);color:var(--dk)}
+.empty{text-align:center;color:var(--mut);padding:40px 12px}
+.agrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.acard{border:0;background:var(--tile);border-radius:16px;padding:6px 4px 8px;text-align:center;font-size:12px}
+.acard svg{width:100%;display:block}
+.acard b{display:block;font-weight:600}
+#wel,#ov{position:fixed;inset:0;z-index:5;display:none}
+#wel{background:var(--bg);align-items:center;justify-content:center;padding:24px;text-align:center;flex-direction:column}
+#wel.on,#ov.on{display:flex}
+.letter{background:var(--cream);color:var(--dk);border-radius:6px;padding:28px 24px;max-width:340px;transform:rotate(-1.5deg);box-shadow:0 8px 0 rgba(0,0,0,.25);font-size:18px;line-height:1.6;text-align:left}
+.letter p{margin:0 0 10px}.sig{font-family:Comfortaa;font-weight:700}
+.cta{margin-top:26px;border:0;border-radius:99px;background:var(--gold);color:var(--dk);font-weight:700;padding:14px 28px;font-size:17px}
+#ov{background:rgba(20,10,30,.8);align-items:center;justify-content:center}
+.stage{position:relative;width:190px;height:250px;perspective:700px}
+.frame{position:absolute;inset:0;border-radius:999px 999px 8px 8px;background:var(--tile);overflow:hidden;box-shadow:inset 0 0 0 6px var(--cream)}
+.frame svg{position:absolute;left:5%;width:90%;bottom:-70px;transition:transform .7s .35s}
+.pop .frame svg{transform:translateY(-62px)}
+.sdoor{position:absolute;inset:0;border-radius:999px 999px 8px 8px;background:var(--pink);transform-origin:left center;transition:transform .8s;box-shadow:inset 0 0 0 6px rgba(255,255,255,.4);display:flex;align-items:flex-end;justify-content:center;padding-bottom:24px;font:700 34px Comfortaa;color:var(--dk)}
+.pop .sdoor{transform:rotateY(-112deg)}
+.sheet{display:none;position:absolute;inset:0;overflow:auto;background:var(--bg);padding:calc(16px + env(safe-area-inset-top,0px)) 18px 24px}
+.sheet.on{display:block}
+.sheet>div{max-width:440px;margin:0 auto}
+.scene{background:linear-gradient(var(--bg2),var(--tile));border-radius:24px;padding:8px 24px 0}
+.scene svg{display:block;width:100%;max-width:280px;margin:0 auto}
+.sheet h2{font-size:26px;margin:16px 0 4px}
+.hi{color:var(--pink);margin:0 0 14px}
+.sheet h3{margin:14px 0 2px;font-size:15px;color:var(--gold)}
+.sheet p{margin:0}
+.mau{text-align:center;font-size:26px;font-weight:700;color:var(--pink);margin:22px 0 14px}
+.acts{display:grid;gap:8px}
+.acts button{border:1px solid var(--lav);background:transparent;border-radius:14px;padding:12px;font-weight:700}
+.acts .main{background:var(--lav);color:var(--dk);border-color:var(--lav)}
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--cream);color:var(--dk);padding:8px 16px;border-radius:99px;font-size:14px;z-index:9;opacity:0;pointer-events:none;transition:opacity .25s}
+#toast.on{opacity:1}
+.top{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:12px 0 6px}
+.purr,.lt{border-radius:99px;padding:10px 18px;font-weight:700;font-size:15px;border:1px solid transparent}
+.purr{background:var(--pink);color:var(--dk)}.purr[aria-pressed="true"]{background:var(--gold)}
+.lt{background:transparent;border-color:var(--lav)}
+.watch{display:block;margin:28px auto 0;border:0;border-radius:99px;padding:12px 24px;font-weight:700;font-size:16px;background:var(--lav);color:var(--dk)}
+.fact{margin-top:28px;background:var(--tile);border-radius:18px;padding:16px 18px}
+.fact h3{margin:0 0 6px;font-size:15px;color:var(--gold)}.fact p{margin:0}
+.paw{display:block;margin:10px 0 0 auto;transform:rotate(12deg);opacity:.6}
+.adv-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 14px;margin-top:14px}
+.ad{border:0;background:none;padding:0;text-align:center;color:var(--ink);font-size:13px}
+.ad .arch{position:relative;overflow:hidden;aspect-ratio:3/4;border-radius:999px 999px 8px 8px;background:var(--pink);color:var(--dk);box-shadow:0 4px 0 rgba(0,0,0,.3),inset 0 0 0 5px rgba(255,255,255,.35);display:flex;align-items:flex-end;justify-content:center;padding-bottom:20px;font:700 28px Comfortaa}
+.ad:nth-child(3n+2) .arch{background:var(--lav)}.ad:nth-child(3n) .arch{background:var(--mint)}
+.ad.lock .arch{opacity:.35}.ad.lock{cursor:default}
+.ad.now .arch{outline:3px solid var(--gold);outline-offset:3px}
+.ad.open .arch{background:var(--tile);box-shadow:inset 0 0 0 4px var(--lav)}
+.ad.open svg{position:absolute;left:0;width:100%;bottom:-8px}
+.ad .l{display:block;margin-top:8px}
+.ad.fin{grid-column:1/-1}.ad.fin .arch{aspect-ratio:auto;height:96px;background:var(--gold)}
+.ad.fin.open .arch{background:var(--tile)}.ad.fin.open svg{width:auto;height:150%;left:50%;transform:translateX(-50%);bottom:-18px}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01s!important}}
+</style>
+</head>
+<body>
+<div id="app">
+ <header><h1>Котодвери</h1><p>За каждой дверцей ждёт что-то заМУРчательное!</p><div class="top"><button class="purr" aria-pressed="false">🐾 Слушать мурчание</button><button class="lt" id="lt">Письмо от V.</button></div></header>
+ <section id="adv"><p class="hi" id="ah" style="text-align:center;font:700 18px Comfortaa"></p><div class="adv-grid" id="ag"></div>
+ <div class="fact"><h3>Котиковый факт</h3><p id="ft"></p></div>
+ <button class="watch" id="wf">🐾 Ещё котиковый факт</button></section>
+ </div>
+<div id="wel"><div class="letter"><p>Котичек,</p><p>знаю, что сейчас дни очень серые и загруженные.</p><p>Пусть они будут чуть более заМУРчательными!</p><p>Обняла,<br><span class="sig">V.</span></p><svg class="paw" viewBox="0 0 64 64" width="58" height="58" aria-hidden="true"><g fill="#c98aa0"><path d="M32 30c-9 0-17 9-17 16 0 6 5 9 10 8 4-1 5-2 7-2s3 1 7 2c5 1 10-2 10-8 0-7-8-16-17-16z"/><ellipse cx="14" cy="26" rx="6" ry="8" transform="rotate(-18 14 26)"/><ellipse cx="25" cy="14" rx="6" ry="8.5"/><ellipse cx="39" cy="14" rx="6" ry="8.5"/><ellipse cx="50" cy="26" rx="6" ry="8" transform="rotate(18 50 26)"/></g></svg></div><button class="cta" id="go">Открыть первую дверцу</button></div>
+<div id="ov"><div class="stage" id="st"><div class="frame"></div><div class="sdoor" id="sd"></div></div><div class="sheet" id="sh"></div></div>
+<div id="toast" role="status"></div>
+<script>
+const B=[
+{n:"Абиссинская кошка",c:"#c9803f",d:"#6e3a1c",lt:"#e3b47c",e:"#b5c03a",m:"tick",ear:"w",hx:48,ln:1,pr:"tree",who:"Элегантная кошка с короткой шерстью и тикингом: каждая шерстинка окрашена в несколько оттенков. Миндалевидные глаза бывают зелёными, золотистыми или ореховыми.",ch:"Активная и очень любопытная. Обычно сильно привязана к человеку.",f:"Абиссинцы любят высоту, движение и исследование пространства."},
+{n:"Мейн-кун",c:"#8a6a4e",d:"#4b3626",lt:"#d9c4a6",e:"#d9b13b",m:"tabby",ear:"l",tf:1,fl:1,mz:21,hx:50,pr:"scarf",who:"Один из самых крупных домашних котов: пушистый хвост, кисточки на ушах, густая шерсть с табби-рисунком.",ch:"Спокойный, дружелюбный и общительный. Часто ладит с детьми и другими животными.",f:"Вместо привычного «мяу» мейн-куны нередко издают мягкое чириканье."},
+{n:"Шотландская вислоухая",c:"#9ea6b4",d:"#68717f",e:"#e0b93f",er:11,m:"none",ear:"f",hx:57,hy:49,mz:15,pr:"gift",who:"Круглая голова, большие круглые глаза и маленькие уши, загнутые вперёд и вниз.",ch:"Мягкая, спокойная и ласковая. Любит быть рядом со своими людьми.",f:"Котята рождаются с прямыми ушками, а сгиб появляется примерно через три–четыре недели."},
+{n:"Сиамская кошка",c:"#efe3d0",d:"#5a4a45",e:"#5aa8e0",m:"mask",ear:"w",hx:44,hy:42,tilt:10,bw:50,pr:"scarf",who:"Изящное тело, клиновидная голова и тёмные «отметины» на мордочке, ушах, лапах и хвосте. Глаза яркие, синие, миндалевидные.",ch:"Разговорчивая, умная и очень общительная. Любит быть в центре событий.",f:"Сиамские котята рождаются почти белыми, а тёмные отметины проявляются с возрастом."},
+{n:"Персидская кошка",c:"#f3ead9",d:"#c9b69a",lt:"#fff8ea",e:"#e49a3a",er:11,m:"none",ear:"r",fl:1,hx:56,hy:50,ny:116,mz:13,pr:"none",who:"Длинная густая шерсть, круглая голова, короткий нос и маленькие ушки.",ch:"Невозмутимая и нежная домоседка. Любит тишину и мягкие пледы.",f:"Шерсть персов требует ежедневного расчёсывания."},
+{n:"Бенгальская кошка",c:"#d9a066",d:"#6e3f1f",lt:"#f3e6d2",e:"#7cc06a",m:"spots",ring:1,ear:"r",ln:1,pr:"gift",who:"Атлетичное тело и пятнистая или мраморная шерсть с золотистым отливом.",ch:"Энергичная, игривая и смелая. Ей нужно много движения и игр.",f:"В отличие от многих кошек, бенгалы нередко с интересом играют с водой."},
+{n:"Русская голубая",c:"#7f8fa3",d:"#566679",e:"#58b872",m:"none",ear:"w",hx:45,hy:42,lt:"#93a3b6",pr:"scarf",who:"Серебристо-голубая плотная шерсть и ярко-зелёные глаза. Мордочка будто слегка улыбается.",ch:"Сдержанная, верная и тихая. С новыми людьми может сначала присматриваться.",f:"Шерсть у неё двойная, поэтому гладить её особенно приятно."},
+{n:"Британская короткошёрстная",c:"#8c97a8",d:"#5f6b7c",e:"#e8933a",er:10,m:"none",ear:"r",hx:58,hy:50,mz:20,pr:"tree",who:"Плюшевая плотная шерсть, круглая голова, пухлые щёки и большие круглые глаза.",ch:"Спокойная и независимая, но ласковая. Любит наблюдать за домом с удобного места.",f:"Британцев часто связывают с образом Чеширского кота из «Алисы в Стране чудес»."},
+{n:"Сфинкс",c:"#dcb9a8",d:"#b88e7c",e:"#88c8a0",er:10,m:"wrink",ear:"w",hx:44,hy:42,lt:"#e8c9b9",pr:"scarf",who:"Почти без шерсти: кожа покрыта тонким пушком. Большие уши, выразительные глаза и складочки на мордочке.",ch:"Ласковая и очень привязчивая. Любит тепло и находится рядом с человеком.",f:"На ощупь сфинксы кажутся тёплыми, как грелка."}];
+const Y=new Date().getFullYear(),T=new Date(),U=(m,d)=>Math.round((Date.UTC(Y,m,d)-Date.UTC(Y,0,0))/864e5),TD=U(T.getMonth(),T.getDate());
+const $=s=>document.querySelector(s),MN=["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"],CL=["#f5ecd9","#e8b4c0","#b9a6e0","#a8d8c3"];
+let S={o:[],f:[],w:0};try{S=Object.assign(S,JSON.parse(localStorage.getItem("kd1")||"{}"))}catch(e){}
+const save=()=>{try{localStorage.setItem("kd1",JSON.stringify(S))}catch(e){}};
+const ADV=[{m:10,d:16,bi:1,pr:"scarf"},{m:10,d:23,bi:7,pr:"fire"},{m:10,d:30,bi:3,pr:"gift"},{m:11,d:7,bi:6,pr:"window"},{m:11,d:14,bi:2,pr:"tree"},{m:11,d:21,bi:4,pr:"fire"},{m:11,d:28,bi:5,pr:"gift"},{m:11,d:31,bi:0,pr:"hat",f:1}];
+const SM=["янв","фев","мар","апр","мая","июн","июл","авг","сен","окт","ноя","дек"];
+const bd=n=>n>1000?B[ADV[n-1001].bi]:B[(n-1)%B.length],P=n=>n>1000?ADV[n-1001].pr:bd(n).pr;
+function dr(a){const s=new Date(Y,a.m,a.d),e=new Date(Y,a.m,a.d+6),x=s.getMonth(),z=e.getMonth();return a.f?"31 декабря":x===z?`${s.getDate()}–${e.getDate()} ${SM[x]}`:`${s.getDate()} ${SM[x]}–${e.getDate()} ${SM[z]}`}
+const hx2=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+const mx=(a,b,t)=>{const A=hx2(a),C=hx2(b);return"#"+A.map((v,i)=>Math.round(v+(C[i]-v)*t).toString(16).padStart(2,"0")).join("")};
+const mir=p=>p.split(" ").map(q=>{const[x,y]=q.split(",");return(200-x)+","+y}).join(" ");
+const R=i=>Math.abs(Math.sin(i*91.7+3.1)*1e4%1);
+let GN=0;
+function cat(b,pr){
+ const id="g"+(GN++),EP={p:["54,86 58,30 98,62","62,78 64,44 88,64"],l:["50,88 52,10 100,60","60,80 61,26 90,62"],f:["58,78 56,56 90,64","64,74 63,62 82,68"],r:["56,82 60,46 92,64","63,76 65,54 86,66"],w:["42,92 38,14 96,62","51,82 50,28 88,64"]}[b.ear||"p"];
+ const hx=b.hx||52,hy=b.hy||46,er=b.er||9,lt=b.lt||b.c,ny=b.ny||120,ec=b.m==="mask"?b.d:b.c,tl=b.tilt||0,c=b.c,dk=mx(c,"#000000",.3),lg=mx(c,"#ffffff",.38);
+ const eye=(x,t)=>`<g transform="rotate(${t} ${x} 106)"><path d="M${x-er-2} 106Q${x} ${106-er*1.5} ${x+er+2} 106Q${x} ${106+er*1.3} ${x-er-2} 106Z" fill="url(#${id}e)" stroke="${b.ln?b.d:"#2b1a22"}" stroke-width="${b.ln?2.2:1.2}"/><ellipse cx="${x}" cy="106" rx="2.6" ry="${er-2.5}" fill="#120a16"/><circle cx="${x+3}" cy="103" r="2.2" fill="#fff"/><circle cx="${x-3}" cy="109" r="1.1" fill="#fff" opacity=".7"/><path d="M${x-er-2} 106Q${x} ${106-er*1.5} ${x+er+2} 106" stroke="#2b1a22" stroke-width="1.8" fill="none"/></g>`;
+ let s=`<svg viewBox="0 0 200 200" role="img" aria-label="${b.n}"><defs><radialGradient id="${id}h" cx=".5" cy=".38" r=".68"><stop offset="0" stop-color="${lg}"/><stop offset=".55" stop-color="${c}"/><stop offset="1" stop-color="${dk}"/></radialGradient><radialGradient id="${id}b" cx=".5" cy=".15" r=".95"><stop offset="0" stop-color="${c}"/><stop offset="1" stop-color="${dk}"/></radialGradient><radialGradient id="${id}e" cx=".5" cy=".4" r=".65"><stop offset="0" stop-color="${mx(b.e,"#ffffff",.5)}"/><stop offset=".6" stop-color="${b.e}"/><stop offset="1" stop-color="${mx(b.e,"#000000",.5)}"/></radialGradient><filter id="${id}f" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3"/></filter></defs>`;
+ if(pr==="hat")s+=`<path d="M0 14Q50 40 100 14T200 14" stroke="#3f6b5a" stroke-width="3" fill="none"/><circle cx="25" cy="27" r="4" fill="#e6c477"/><circle cx="75" cy="30" r="4" fill="#e8b4c0"/><circle cx="125" cy="30" r="4" fill="#a8d8c3"/><circle cx="175" cy="27" r="4" fill="#b9a6e0"/>`;
+ if(pr==="tree")s+=`<rect x="168" y="150" width="8" height="20" fill="#7b4a24"/><polygon points="172,52 150,98 194,98" fill="#3f6b5a"/><polygon points="172,82 144,132 200,132" fill="#4a7d68"/><polygon points="172,112 138,160 200,160" fill="#3f6b5a"/><circle cx="168" cy="96" r="4" fill="#e6c477"/><circle cx="182" cy="126" r="4" fill="#e8b4c0"/><circle cx="156" cy="140" r="4" fill="#b9a6e0"/><circle cx="172" cy="52" r="4" fill="#e6c477"/>`;
+ if(pr==="window")s+=`<rect x="134" y="30" width="60" height="84" rx="5" fill="#1f2b55" stroke="#f5ecd9" stroke-width="5"/><path d="M164 30v84M134 72h60" stroke="#f5ecd9" stroke-width="3"/><g fill="#fff"><circle cx="148" cy="48" r="2.5"/><circle cx="178" cy="56" r="2.5"/><circle cx="152" cy="92" r="2.5"/><circle cx="180" cy="98" r="2.5"/></g><rect x="128" y="112" width="72" height="8" rx="3" fill="#f5ecd9"/>`;
+ if(pr==="fire")s+=`<rect x="128" y="100" width="72" height="80" rx="4" fill="#7a4b3a"/><rect x="144" y="124" width="40" height="56" rx="18" fill="#2a1b38"/><path d="M164 176c-16-3-14-18-4-26 1 7 6 7 6 0 10 7 16 22-2 26z" fill="#e6a04a"/><rect x="124" y="92" width="80" height="10" rx="3" fill="#f5ecd9"/>`;
+ s+=`<ellipse cx="100" cy="188" rx="${b.bw||58}" ry="40" fill="url(#${id}b)"/>`;
+ if(b.m!=="wrink")for(let i=0;i<26;i++){const x=60+R(i)*80,y=160+R(i+9)*36,l=6+R(i+3)*5;s+=`<path d="M${x.toFixed(1)} ${y.toFixed(1)}l${(x<100?-1:1)*2}${l.toFixed(1)}" stroke="${i%2?dk:lg}" stroke-width="1.2" opacity=".35" stroke-linecap="round"/>`}
+ if(b.fl){for(let i=0;i<12;i++){const a=i*Math.PI/6;s+=`<circle cx="${(100+(hx+4)*Math.cos(a)).toFixed(1)}" cy="${(112+(hy-2)*Math.sin(a)).toFixed(1)}" r="12" fill="${c}"/>`}s+=`<ellipse cx="100" cy="160" rx="34" ry="20" fill="${lt}"/>`}
+ s+=`<ellipse cx="80" cy="192" rx="15" ry="9" fill="${lt}" stroke="${dk}" stroke-opacity=".3"/><ellipse cx="120" cy="192" rx="15" ry="9" fill="${lt}" stroke="${dk}" stroke-opacity=".3"/><path d="M75 188v7M82 188v7M115 188v7M122 188v7" stroke="${dk}" stroke-opacity=".4" stroke-width="1.2"/>`;
+ s+=`<ellipse cx="100" cy="152" rx="${hx*.85}" ry="12" fill="#000" opacity=".28" filter="url(#${id}f)"/>`;
+ s+=`<g stroke="${dk}" stroke-opacity=".4"><polygon points="${EP[0]}" fill="${ec}"/><polygon points="${mir(EP[0])}" fill="${ec}"/></g><polygon points="${EP[1]}" fill="#d98a98"/><polygon points="${mir(EP[1])}" fill="#d98a98"/>`;
+ if(b.tf){const tf="M52 12l-3-11M56 20l-7-8M60 30l-9-5";s+=`<g stroke="${b.d}" stroke-width="2.5" stroke-linecap="round" fill="none"><path d="${tf}"/><path transform="translate(200 0) scale(-1 1)" d="${tf}"/></g>`}
+ s+=`<ellipse cx="100" cy="110" rx="${hx}" ry="${hy}" fill="url(#${id}h)" stroke="${dk}" stroke-opacity=".25"/>`;
+ if(b.m!=="wrink"){const L=b.fl?9:6;for(let i=0;i<44;i++){const a=R(i+20)*6.283,rd=.2+R(i+60)*.75,px=100+Math.cos(a)*hx*rd,py=112+Math.sin(a)*hy*rd,dx=px-100,dy=py-124,n=Math.hypot(dx,dy)||1;s+=`<path d="M${px.toFixed(1)} ${py.toFixed(1)}l${(dx/n*L).toFixed(1)} ${(dy/n*L).toFixed(1)}" stroke="${i%2?dk:lg}" stroke-width="1.1" opacity=".33" stroke-linecap="round"/>`}}
+ if(b.m==="mask")s+=`<ellipse cx="100" cy="122" rx="27" ry="22" fill="${b.d}" opacity=".9" filter="url(#${id}f)"/>`;else s+=`<ellipse cx="100" cy="${ny+6}" rx="${b.mz||17}" ry="12" fill="${lt}" opacity=".9"/>`;
+ if(b.m==="tick"||b.m==="tabby")s+=`<path d="M88 66q4 8 0 16M100 62v18M112 66q-4 8 0 16" stroke="${b.d}" stroke-width="${b.m==="tabby"?4:2.5}" stroke-linecap="round" fill="none"/>`+(b.m==="tabby"?`<path d="M52 112h14M54 124h12M148 112h-14M146 124h-12M70 92q-8-4-14-2M130 92q8-4 14-2" stroke="${b.d}" stroke-width="3" stroke-linecap="round" fill="none"/>`:"");
+ if(b.m==="spots")s+=[[72,92],[128,96],[90,76],[112,78],[62,116],[140,118]].map(q=>`<circle cx="${q[0]}" cy="${q[1]}" r="4.5" fill="${b.d}"/>`+(b.ring?`<circle cx="${q[0]}" cy="${q[1]}" r="8" fill="none" stroke="${b.d}" stroke-width="1.5" opacity=".6"/>`:"")).join("");
+ if(b.m==="wrink")s+=`<path d="M80 84q20-7 40 0M84 92q16-5 32 0M66 110q-4 6 0 12M134 110q4 6 0 12" stroke="${b.d}" fill="none" stroke-width="2" opacity=".5"/>`;
+ s+=eye(80,tl)+eye(120,-tl);
+ s+=`<g fill="${dk}" opacity=".35"><circle cx="88" cy="${ny+8}" r="1"/><circle cx="84" cy="${ny+11}" r="1"/><circle cx="90" cy="${ny+12}" r="1"/><circle cx="112" cy="${ny+8}" r="1"/><circle cx="116" cy="${ny+11}" r="1"/><circle cx="110" cy="${ny+12}" r="1"/></g>`;
+ s+=`<path d="M94 ${ny}Q100 ${ny-2} 106 ${ny}Q104 ${ny+6} 100 ${ny+8}Q96 ${ny+6} 94 ${ny}Z" fill="#d98592"/><ellipse cx="98.5" cy="${ny+1.2}" rx="2" ry="1" fill="#fff" opacity=".4"/><path d="M100 ${ny+8}v4M100 ${ny+12}q-6 6-12 2M100 ${ny+12}q6 6 12 2" stroke="#5a3b45" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
+ s+=`<g stroke="#fff" stroke-opacity=".8" stroke-width="1.2" fill="none"><path d="M70 ${ny+4}Q52 ${ny-4} 32 ${ny-2}M70 ${ny+8}Q52 ${ny+8} 34 ${ny+15}M130 ${ny+4}Q148 ${ny-4} 168 ${ny-2}M130 ${ny+8}Q148 ${ny+8} 166 ${ny+15}M72 92l-9-6M78 90l-6-8M128 92l9-6M122 90l6-8"/></g>`;
+ if(pr==="scarf")s+=`<path d="M56 150Q100 174 144 150L148 165Q100 190 52 165Z" fill="#e8b4c0"/><rect x="128" y="158" width="14" height="30" rx="4" fill="#e8b4c0"/><path d="M60 156l8 14M82 164l6 14M110 166l-4 14" stroke="#fff" stroke-opacity=".6" stroke-width="3"/>`;
+ if(pr==="gift")s+=`<rect x="10" y="150" width="46" height="40" rx="3" fill="#b9a6e0"/><rect x="28" y="150" width="10" height="40" fill="#f5ecd9"/><rect x="10" y="164" width="46" height="9" fill="#f5ecd9"/><path d="M33 150q-12-16-2-16t2 16q10-16 2-16t-2 16" fill="#f5ecd9"/>`;
+ if(pr==="hat")s+=`<path d="M62 66Q96 -2 140 62Z" fill="#e8b4c0"/><rect x="58" y="60" width="86" height="12" rx="6" fill="#f5ecd9"/><circle cx="118" cy="10" r="8" fill="#f5ecd9"/>`;
+ return s+"</svg>";
+}
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");setTimeout(()=>e.classList.remove("on"),1800)}
+let AC=null,PU=null;
+const curW=()=>ADV.findIndex(a=>!a.f&&TD>=U(a.m,a.d)&&TD<U(a.m,a.d)+7),PL=()=>PU?"⏹ Остановить мурчание":"🐾 Слушать мурчание";
+function purr(on){
+ if(!on){if(PU){PU();PU=null}return}
+ try{
+  AC=AC||new(window.AudioContext||window.webkitAudioContext)();AC.resume();
+  const sr=AC.sampleRate,buf=AC.createBuffer(1,sr*2,sr),d=buf.getChannelData(0);let l=0;
+  for(let i=0;i<d.length;i++){l=(l+.05*(Math.random()*2-1))/1.05;d[i]=l*7}
+  const src=AC.createBufferSource();src.buffer=buf;src.loop=true;
+  const f1=AC.createBiquadFilter(),f2=AC.createBiquadFilter(),g2=AC.createGain(),am=AC.createGain(),out=AC.createGain();
+  f1.type=f2.type="bandpass";f1.frequency.value=170;f1.Q.value=.8;f2.frequency.value=520;f2.Q.value=.9;g2.gain.value=.35;
+  am.gain.value=.5;const l1=AC.createOscillator(),lg=AC.createGain();l1.frequency.value=25;lg.gain.value=.5;l1.connect(lg);lg.connect(am.gain);
+  out.gain.value=0;const l2=AC.createOscillator(),lg2=AC.createGain();l2.frequency.value=.35;lg2.gain.value=.12;l2.connect(lg2);lg2.connect(out.gain);
+  src.connect(f1);src.connect(f2);f2.connect(g2);f1.connect(am);g2.connect(am);am.connect(out);out.connect(AC.destination);
+  src.start();l1.start();l2.start();out.gain.setTargetAtTime(.7,AC.currentTime,.4);
+  PU=()=>{out.gain.cancelScheduledValues(AC.currentTime);out.gain.setTargetAtTime(0,AC.currentTime,.12);setTimeout(()=>{try{src.stop();l1.stop();l2.stop()}catch(e){}},600)};
+ }catch(e){PU=null;toast("Звук недоступен на этом устройстве")}
+}
+function card(k){
+ const b=bd(k),sh=$("#sh"),ad=k>1000,fin=k===1008;
+ sh.innerHTML=`<div><div class="top"><button class="purr" aria-pressed="${!!PU}">${PL()}</button></div><div class="scene">${cat(b,P(k))}</div><h2>${b.n}</h2><p class="hi">${ad&&!fin?"На этой неделе":"Сегодня"} тебя приветствует ${b.n}!</p><h3>Кто это?</h3><p>${b.who}</p><h3>Какой характер?</h3><p>${b.ch}</p><h3>Котиковый факт</h3><p>${b.f}</p><div class="mau"${fin?' style="font-size:20px"':""}>${fin?"С новым заМУРчательным годом!":"мау!"}</div><div class="acts"><button class="main" id="sr">Поделиться карточкой</button><button id="cl">Закрыть дверцу</button></div></div>`;
+ sh.classList.add("on");sh.scrollTop=0;
+ $("#sr").onclick=async()=>{const t=`${ad&&!fin?"На этой неделе":"Сегодня"} меня встретил(а) ${b.n}! Котодвери: за каждой дверцей ждёт что-то заМУРчательное.`;try{if(navigator.share){await navigator.share({text:t})}else{await navigator.clipboard.writeText(t);toast("Текст скопирован")}}catch(e){toast("Не удалось поделиться")}};
+ $("#cl").onclick=()=>{$("#ov").classList.remove("on");sh.classList.remove("on");advent()};
+}
+function openDay(k){
+ const ov=$("#ov"),st=$("#st"),isNew=!S.o.includes(k);
+ ov.classList.add("on");$("#sh").classList.remove("on");
+ if(!isNew){st.style.display="none";card(k);return}
+ st.style.display="";st.classList.remove("pop");$("#sd").textContent="❄";
+ st.querySelector(".frame").innerHTML=cat(bd(k),"");
+ setTimeout(()=>st.classList.add("pop"),60);
+ setTimeout(()=>{S.o.push(k);save();st.style.display="none";card(k)},1700);
+}
+function advent(){
+ const cur=curW();
+ $("#ah").textContent=cur>=0?`На этой неделе тебя приветствует ${B[ADV[cur].bi].n}!`:TD<U(10,16)?"Адвент начнётся 16 ноября.":"Адвент завершён — котики ждут за дверцами.";
+ $("#ag").innerHTML=ADV.map((a,i)=>{const k=1001+i,lk=TD<U(a.m,a.d),op=S.o.includes(k),b=B[a.bi];
+  return`<button class="ad${op?" open":""}${lk?" lock":""}${i===cur?" now":""}${a.f?" fin":""}" data-k="${k}" ${lk?"disabled":""}><span class="arch">${op?cat(b,a.pr):a.f?"31 дек":"❄"}</span><span class="l">${dr(a)}${op?"<br><b>"+b.n+"</b>":""}</span></button>`}).join("");
+}
+$("#ag").onclick=e=>{const b=e.target.closest(".ad");if(b&&!b.disabled)openDay(+b.dataset.k)};
+document.addEventListener("click",e=>{const b=e.target.closest(".purr");if(!b)return;purr(!PU);document.querySelectorAll(".purr").forEach(x=>{x.textContent=PL();x.setAttribute("aria-pressed",!!PU)})});
+document.addEventListener("visibilitychange",()=>{if(document.hidden&&PU){purr(false);document.querySelectorAll(".purr").forEach(x=>{x.textContent=PL();x.setAttribute("aria-pressed","false")})}});
+$("#lt").onclick=()=>$("#wel").classList.add("on");
+$("#go").onclick=()=>{$("#wel").classList.remove("on");S.w=1;save();const c=curW();if(c>=0&&!S.o.includes(1001+c))openDay(1001+c)};
+const FACTS=["Кошки спят в среднем 12–16 часов в сутки, а котята — ещё дольше.", "У большинства кошек 18 пальцев: по пять на передних лапах и по четыре на задних.", "Мурлыканье — это вибрация примерно в 25–150 герц. Кошки мурлыкают не только от удовольствия, но и чтобы успокоиться.", "Рисунок на носу у каждой кошки уникален, как отпечаток пальца у человека.", "Усы-вибриссы помогают кошке чувствовать воздушные потоки и оценивать, пролезет ли она в узкий проход.", "Кошки умеют поворачивать уши независимо друг от друга, чтобы точнее ловить звуки.", "Глаза кошек блестят в темноте благодаря особому слою, который отражает свет обратно к сетчатке.", "Кошки не различают сладкий вкус: у них нет работающего рецептора сладкого.", "Медленное моргание в сторону человека часто называют «кошачьим поцелуем». Можно моргнуть в ответ.", "Взрослые кошки мяукают в основном для людей, а друг с другом общаются телом, хвостом и запахами.", "Хвост трубой — знак дружелюбия и приветствия.", "Кошки почти всегда приземляются на лапы благодаря гибкому позвоночнику и рефлексу выпрямления в воздухе.", "Язык кошки покрыт крошечными шипиками, которые работают как расчёска.", "Кошки «месят» лапами, как делали котятами у мамы, когда им хорошо и спокойно.", "Кошка может прыгнуть примерно в пять раз выше собственного роста.", "Домашние кошки произошли от дикой степной кошки Ближнего Востока и живут рядом с людьми около десяти тысяч лет.", "Котята рождаются слепыми и глухими: глаза открываются примерно на 7–10-й день.", "Кошки потеют в основном через подушечки лап.", "Кошки слышат очень высокие звуки, недоступные человеческому уху, — вот почему они замечают мышей.", "Кошки проводят много времени за уходом за шерстью: вылизывание успокаивает и помогает терморегуляции.", "Кошки «пробуют воздух»: приоткрытый рот и застывшая мордочка (гримаса флехмен) помогают направить запахи к особому органу на нёбе.", "Кошки различают меньше цветов, чем люди: лучше всего они видят синие и зелёно-жёлтые оттенки.", "Поле зрения у кошки шире человеческого — около 200 градусов.", "Для ночного зрения кошке нужно гораздо меньше света, чем человеку.", "На коротких рывках домашняя кошка может разгоняться примерно до 48 километров в час.", "У взрослой кошки 30 зубов, а у котёнка 26 молочных.", "Кошка пьёт, быстро касаясь воды кончиком языка: за ним тянется столбик воды, и она его ловит.", "Нормальная температура тела кошки — около 38–39 градусов.", "Сердце кошки бьётся примерно в два раза быстрее человеческого.", "Котовник, или кошачья мята, действует примерно на две трети кошек, остальным он безразличен.", "Хвост помогает кошке держать равновесие при прыжках и на узких поверхностях.", "Потираясь головой о мебель и людей, кошка оставляет запах со щёк: так она помечает своё как «своё».", "Кошки умеют издавать много разных звуков: мяуканье, мурлыканье, чириканье, трели.", "Черепаховые и калико-кошки почти всегда кошки, а не коты: окрас связан с Х-хромосомой.", "Среди рыжих котов мальчиков примерно в четыре раза больше, чем девочек.", "Первой кошкой в космосе стала француженка Фелисетт в 1963 году. Она благополучно вернулась на Землю.", "Группу кошек называют по-английски «клауддер».", "В Древнем Египте кошек почитали, а богиню Бастет изображали с кошачьей головой.", "Мурлыканье кошки звучит непрерывно: и на вдохе, и на выдохе.", "Домашние кошки живут в среднем 12–18 лет, а рекордсменка прожила 38 лет.", "Кошки плохо видят предметы вплотную к носу, поэтому им помогают усы.", "Белые кошки с голубыми глазами рождаются глухими чаще других."];
+let FI=TD%FACTS.length;
+const fact=()=>{$("#ft").textContent=FACTS[FI]};
+$("#wf").onclick=()=>{FI=(FI+1)%FACTS.length;fact()};
+fact();
+if(!S.w)$("#wel").classList.add("on");
+advent();
+</script>
+</body>
+</html>
